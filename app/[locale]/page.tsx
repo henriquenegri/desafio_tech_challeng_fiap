@@ -161,7 +161,7 @@ export default function LoginPage() {
         </section>
       </div>
 
-      <footer className="text-muted bg-background/50 z-10 w-full p-6 text-xs font-medium tracking-wider uppercase backdrop-blur-sm">
+      <footer className="text-muted bg-background/50 z-10 w-full p-6 text-xs font-medium tracking-wider uppercase backdrop-blur-xs">
         <div className="mx-auto flex w-full max-w-[420px] justify-between md:hidden">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4" aria-hidden="true" />
