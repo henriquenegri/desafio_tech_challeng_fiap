@@ -1,51 +1,63 @@
-Tech Challenge - Sistema de Gestão Financeira
-Este projeto é uma aplicação de gestão de transações financeiras desenvolvida como parte do Tech Challenge (POSTECH). A solução foi construída com foco em UI/UX moderna, acessibilidade ampla e suporte a internacionalização, permitindo uma experiência fluida para diferentes perfis de usuários.
+# Tech Challenge - Sistema de Gestão Financeira
 
-- Sobre o Projeto
-O sistema permite que o usuário gerencie suas finanças pessoais de forma intuitiva. As principais funcionalidades incluem:
+Este projeto é uma aplicação de gestão de transações financeiras, desenvolvida como parte do Tech Challenge (POSTECH).
 
-Gestão de Transações: Adição, edição (opcional) e exclusão de transações financeiras.
+A solução foi construída com foco em UI/UX moderna, acessibilidade e internacionalização (i18n), proporcionando uma experiência fluida e intuitiva para diferentes perfis de usuários.
 
-Visualização de Dados: Listagem clara de entradas e saídas.
+---
 
-Modo Escuro/Claro (Dark/Light Mode): Alteração dinâmica de tema para maior conforto visual.
+## Sobre o Projeto
 
-Internacionalização (i18n): Suporte completo para troca de idioma entre Português (BR) e Inglês (EN).
+O sistema permite que o usuário gerencie suas finanças pessoais de forma simples e eficiente.
 
-Mock de Dados: Utilização de dados simulados (JSON/Frontend) para demonstração imediata do fluxo.
+### Funcionalidades
 
-- Tecnologias Utilizadas
-Next.js (Framework React)
-Tailwind CSS (Estilização e Temas)
+- **Gestão de Transações**
+  - Adição de transações
+  - Edição (opcional)
+  - Exclusão
 
-- Como Rodar a Aplicação
-A aplicação foi configurada para que o ambiente de desenvolvimento seja iniciado de forma rápida e simplificada.
+- **Visualização de Dados**
+  - Listagem clara de entradas e saídas
 
-1. Clonar o Repositório
-Escolha o diretório de sua preferência e execute:
+- **Modo Claro/Escuro**
+  - Alternância dinâmica entre temas (Light/Dark Mode)
 
-Bash
+- **Internacionalização (i18n)**
+  - Suporte para:
+    - Português (PT-BR)
+    - Inglês (EN)
+
+- **Mock de Dados**
+  - Utilização de dados simulados (JSON / Frontend) para facilitar testes e demonstração
+
+---
+
+## Tecnologias Utilizadas
+
+- Next.js (Framework React)
+- Tailwind CSS (Estilização e temas)
+- Lucide React (Ícones acessíveis)
+
+> Adicione aqui outras bibliotecas utilizadas, como:
+> i18next, react-hook-form, zod, entre outras.
+
+---
+
+## Como Rodar o Projeto
+
+### 1. Clonar o repositório
+
+```bash
 git clone https://github.com/haramoni/tech-challenge.git
 cd tech-challenge
 
-2. Instalar Dependências
-Este comando instalará automaticamente todas as bibliotecas e frameworks necessários (incluindo Next.js e Tailwind):
+### 2. Instalar dependências
+- NPM INSTALL
 
-Bash
-npm install
+### 3. Executar o projeto
+- npm run dev
 
-3. Iniciar em Modo de Desenvolvimento
-Para rodar o projeto localmente:
+A aplicação estará disponível em:
 
-Bash
-npm run dev
-Após o comando, a aplicação estará disponível em: http://localhost:3000.
-
-- Acessibilidade e Design
-Como um projeto com foco em excelência técnica:
-
-Design: Baseado no protótipo oficial do Figma.
-
-UX: Fluxos de navegação otimizados e feedback visual para ações do usuário.
-
-Acessibilidade: Uso de contraste adequado e tags semânticas para suporte a tecnologias assistivas.
+http://localhost:3000
