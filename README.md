@@ -38,9 +38,7 @@ O sistema permite que o usuário gerencie suas finanças pessoais de forma simpl
 - Next.js (Framework React)
 - Tailwind CSS (Estilização e temas)
 - Lucide React (Ícones acessíveis)
-
-> Adicione aqui outras bibliotecas utilizadas, como:
-> i18next, react-hook-form, zod, entre outras.
+- i18next
 
 ---
 
