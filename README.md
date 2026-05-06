@@ -27,11 +27,13 @@ Escolha o diretório de sua preferência e execute:
 Bash
 git clone https://github.com/haramoni/tech-challenge.git
 cd tech-challenge
+
 2. Instalar Dependências
 Este comando instalará automaticamente todas as bibliotecas e frameworks necessários (incluindo Next.js e Tailwind):
 
 Bash
 npm install
+
 3. Iniciar em Modo de Desenvolvimento
 Para rodar o projeto localmente:
 
