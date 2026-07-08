@@ -1,0 +1,62 @@
+/* TEMA CLARO (Padrão) */
+:root {
+  --background: #f4f5f5;
+  --foreground: #121413;
+  --surface-container: #ffffff;
+  --surface-input: #e2e3e1;
+  --outline-variant: #c2c5c4;
+  --primary-teal: #38a28d;
+  --primary-hover: #73d8c1;
+  --text-muted: #5a605e;
+  --alert-coral: #d34c31;
+}
+
+/* TEMA ESCURO */
+.dark {
+  --background: #121413;
+  --foreground: #e2e3e1;
+  --surface-container: #1e201f;
+  --surface-input: #1a1c1b;
+  --outline-variant: #3e4946;
+  --primary-teal: #73d8c1;
+  --primary-hover: #38a28d;
+  --text-muted: #8e9592;
+  --alert-coral: #ffb4a3;
+}
+
+/* MAPEAMENTO DO TAILWIND V4 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface-container);
+  --color-input: var(--surface-input);
+  --color-outline: var(--outline-variant);
+  --color-brand: var(--primary-teal);
+  --color-brand-hover: var(--primary-hover);
+  --color-muted: var(--text-muted);
+  --color-alert: var(--alert-coral);
+
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* ESTILOS GLOBAIS DA PÁGINA */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CORREÇÃO DO AUTOFILL DOS NAVEGADORES (MANTÉM O DESIGN SYSTEM) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--surface-input) inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+button:hover {
+  cursor: pointer;
+}
