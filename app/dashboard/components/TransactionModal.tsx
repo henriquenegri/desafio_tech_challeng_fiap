@@ -27,12 +27,99 @@ const categoryOptions = [
 ] as const;
 
 const categoryKeywords: { value: string; keywords: string[] }[] = [
-  { value: "Alimentação", keywords: ["mercado", "almoço", "jantar", "restaurante", "pizza", "lanche", "comida", "supermercado", "feira", "padaria", "mcdonald", "burger"] },
-  { value: "Compras", keywords: ["shopping", "roupas", "tênis", "camisa", "amazon", "loja", "eletronico", "livro", "presente", "mercadolivre"] },
-  { value: "Trabalho", keywords: ["salário", "freela", "bônus", "job", "projeto", "receita", "pagamento", "comissão"] },
-  { value: "Moradia", keywords: ["aluguel", "condomínio", "iptu", "reforma", "casa", "apartamento", "móveis", "decor"] },
-  { value: "Investimentos", keywords: ["ações", "fiis", "tesouro", "investimento", "poupança", "xp", "rendimento", "inter", "cdi", "dividendos"] },
-  { value: "Contas", keywords: ["luz", "água", "gás", "telefone", "internet", "energia", "boleto", "multa", "fatura", "seguro", "coelba", "sabesp", "net", "claro", "vivo"] },
+  {
+    value: "Alimentação",
+    keywords: [
+      "mercado",
+      "almoço",
+      "jantar",
+      "restaurante",
+      "pizza",
+      "lanche",
+      "comida",
+      "supermercado",
+      "feira",
+      "padaria",
+      "mcdonald",
+      "burger",
+    ],
+  },
+  {
+    value: "Compras",
+    keywords: [
+      "shopping",
+      "roupas",
+      "tênis",
+      "camisa",
+      "amazon",
+      "loja",
+      "eletronico",
+      "livro",
+      "presente",
+      "mercadolivre",
+    ],
+  },
+  {
+    value: "Trabalho",
+    keywords: [
+      "salário",
+      "freela",
+      "bônus",
+      "job",
+      "projeto",
+      "receita",
+      "pagamento",
+      "comissão",
+    ],
+  },
+  {
+    value: "Moradia",
+    keywords: [
+      "aluguel",
+      "condomínio",
+      "iptu",
+      "reforma",
+      "casa",
+      "apartamento",
+      "móveis",
+      "decor",
+    ],
+  },
+  {
+    value: "Investimentos",
+    keywords: [
+      "ações",
+      "fiis",
+      "tesouro",
+      "investimento",
+      "poupança",
+      "xp",
+      "rendimento",
+      "inter",
+      "cdi",
+      "dividendos",
+    ],
+  },
+  {
+    value: "Contas",
+    keywords: [
+      "luz",
+      "água",
+      "gás",
+      "telefone",
+      "internet",
+      "energia",
+      "boleto",
+      "multa",
+      "fatura",
+      "seguro",
+      "coelba",
+      "sabesp",
+      "net",
+      "claro",
+      "vivo",
+    ],
+  },
 ];
 
 function createEmptyTransaction(): Transaction {
@@ -76,15 +163,22 @@ export function TransactionModal({
     setIsSuggested(false);
   }, [transaction]);
 
-  const suggestCategory = (title: string): { value: string; iconName: string } | null => {
+  const suggestCategory = (
+    title: string,
+  ): { value: string; iconName: string } | null => {
     if (!title.trim()) return null;
     const lowerTitle = title.toLowerCase();
     for (const cat of categoryKeywords) {
       for (const keyword of cat.keywords) {
         if (lowerTitle.includes(keyword)) {
-          const matchedOption = categoryOptions.find((opt) => opt.value === cat.value);
+          const matchedOption = categoryOptions.find(
+            (opt) => opt.value === cat.value,
+          );
           if (matchedOption) {
-            return { value: matchedOption.value, iconName: matchedOption.iconName };
+            return {
+              value: matchedOption.value,
+              iconName: matchedOption.iconName,
+            };
           }
         }
       }
@@ -252,13 +346,13 @@ export function TransactionModal({
               value={transactionData.title}
               onChange={(e) => handleTitleChange(e.target.value)}
               type="text"
-              className={`bg-input text-foreground w-full rounded-lg border px-4 py-2.5 outline-none transition-colors focus:ring-1 focus:ring-brand/35 ${
+              className={`bg-input text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 transition-colors outline-none focus:ring-1 ${
                 errors.title ? "border-alert" : "border-outline"
               }`}
               placeholder={t("titlePlaceholder")}
             />
             {errors.title && (
-              <p className="text-alert text-xs mt-1 font-semibold transition-all">
+              <p className="text-alert mt-1 text-xs font-semibold transition-all">
                 {tValidation(errors.title)}
               </p>
             )}
@@ -288,13 +382,13 @@ export function TransactionModal({
                 }}
                 type="number"
                 step="0.01"
-                className={`bg-input text-foreground w-full rounded-lg border px-4 py-2.5 outline-none transition-colors focus:ring-1 focus:ring-brand/35 ${
+                className={`bg-input text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 transition-colors outline-none focus:ring-1 ${
                   errors.amount ? "border-alert" : "border-outline"
                 }`}
                 placeholder="0.00"
               />
               {errors.amount && (
-                <p className="text-alert text-xs mt-1 font-semibold transition-all">
+                <p className="text-alert mt-1 text-xs font-semibold transition-all">
                   {tValidation(errors.amount)}
                 </p>
               )}
@@ -313,7 +407,7 @@ export function TransactionModal({
                     type: e.target.value as Transaction["type"],
                   }))
                 }
-                className="bg-input border-outline text-foreground w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-1 focus:ring-brand/35"
+                className="bg-input border-outline text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-1"
               >
                 <option value="out">{t("typeOut")}</option>
                 <option value="in">{t("typeIn")}</option>
@@ -347,7 +441,7 @@ export function TransactionModal({
                   });
                 }
               }}
-              className={`bg-input text-foreground w-full rounded-lg border px-4 py-2.5 outline-none transition-colors focus:ring-1 focus:ring-brand/35 ${
+              className={`bg-input text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 transition-colors outline-none focus:ring-1 ${
                 errors.category ? "border-alert" : "border-outline"
               }`}
             >
@@ -359,12 +453,12 @@ export function TransactionModal({
               ))}
             </select>
             {errors.category && (
-              <p className="text-alert text-xs mt-1 font-semibold transition-all">
+              <p className="text-alert mt-1 text-xs font-semibold transition-all">
                 {tValidation(errors.category)}
               </p>
             )}
             {isSuggested && !errors.category && (
-              <p className="text-brand text-xs mt-1 font-semibold flex items-center gap-1 animate-pulse">
+              <p className="text-brand mt-1 flex animate-pulse items-center gap-1 text-xs font-semibold">
                 <span>✨ {tValidation("suggested")}</span>
               </p>
             )}
@@ -383,7 +477,7 @@ export function TransactionModal({
                     <p className="text-foreground truncate text-xs font-semibold">
                       {transactionData.attachment.name}
                     </p>
-                    <p className="text-muted text-[10px] mt-0.5">
+                    <p className="text-muted mt-0.5 text-[10px]">
                       {(transactionData.attachment.size / 1024).toFixed(1)} KB
                     </p>
                   </div>
@@ -391,13 +485,13 @@ export function TransactionModal({
                 <button
                   type="button"
                   onClick={handleRemoveFile}
-                  className="text-muted hover:text-alert rounded-lg p-1.5 transition-colors cursor-pointer"
+                  className="text-muted hover:text-alert cursor-pointer rounded-lg p-1.5 transition-colors"
                 >
                   <Trash2 className="h-4.5 w-4.5" />
                 </button>
               </div>
             ) : (
-              <div className="border-outline/50 hover:border-brand/40 bg-input/10 relative flex flex-col items-center justify-center rounded-xl border border-dashed py-5 px-4 text-center transition-colors cursor-pointer">
+              <div className="border-outline/50 hover:border-brand/40 bg-input/10 relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed px-4 py-5 text-center transition-colors">
                 <input
                   type="file"
                   accept="image/*,application/pdf"
@@ -408,7 +502,7 @@ export function TransactionModal({
                 <p className="text-brand text-xs font-bold">
                   {tAttachment("uploadButton")}
                 </p>
-                <p className="text-muted text-[10px] mt-0.5">
+                <p className="text-muted mt-0.5 text-[10px]">
                   {tAttachment("helperText")}
                 </p>
               </div>
@@ -417,7 +511,7 @@ export function TransactionModal({
 
           <button
             type="submit"
-            className="bg-brand hover:bg-brand-hover text-background mt-4 w-full rounded-xl py-3 font-bold transition-colors cursor-pointer"
+            className="bg-brand hover:bg-brand-hover text-background mt-4 w-full cursor-pointer rounded-xl py-3 font-bold transition-colors"
           >
             {isEditing ? t("saveEdit") : t("saveNew")}
           </button>

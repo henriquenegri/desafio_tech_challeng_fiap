@@ -185,16 +185,16 @@ export function TransactionsSection({
               />
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <div className="bg-input border border-outline/10 flex h-16 w-16 items-center justify-center rounded-2xl text-muted mb-4 transition-colors duration-300">
+            <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
+              <div className="bg-input border-outline/10 text-muted mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border transition-colors duration-300">
                 <Search className="h-8 w-8 opacity-45" />
               </div>
-              <h4 className="text-foreground text-base font-semibold md:text-lg transition-colors duration-300">
+              <h4 className="text-foreground text-base font-semibold transition-colors duration-300 md:text-lg">
                 {tFilters("noResults")}
               </h4>
               <button
                 onClick={handleClearFilters}
-                className="text-brand hover:text-brand-hover mt-3 text-sm font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="text-brand hover:text-brand-hover mt-3 flex cursor-pointer items-center gap-1.5 text-sm font-bold transition-colors"
               >
                 <RotateCcw className="h-4 w-4" />
                 <span>{tFilters("clearFilters")}</span>
@@ -206,4 +206,3 @@ export function TransactionsSection({
     </section>
   );
 }
-

@@ -2,21 +2,19 @@
 
 import { Bell, Menu, Moon, Sun, User } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl"; // Adicionado
+import { useTranslations } from "next-intl";
 
-import { useTheme } from "@/app/theme/themeProvider"; // Adicionado
+import { useTheme } from "@/app/theme/themeProvider";
 
-import { LocaleSwitcher } from "./LocaleSwitcher"; // Adicionado (ajuste o caminho se necessário)
+import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function HeaderMobile() {
-  // Inicialização das funções de tradução e tema
-  const t = useTranslations("header"); // Ajuste o namespace conforme seu JSON
+  const t = useTranslations("header");
   const tLayout = useTranslations("layout");
   const { toggleTheme, theme } = useTheme();
-  
+
   const pathname = usePathname();
 
-  // Se estiver na página de login (raiz), não renderiza o header mobile
   if (pathname === "/") return null;
 
   return (
@@ -29,7 +27,7 @@ export function HeaderMobile() {
           <Menu className="h-6 w-6" />
         </button>
         <span className="text-brand text-xl font-semibold tracking-tight">
-          {tLayout("appName")}
+          {tLayout("appNameMobile")}
         </span>
       </div>
       <div className="flex items-center gap-3">

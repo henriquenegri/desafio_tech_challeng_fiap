@@ -4,16 +4,16 @@ import { Home, LogOut, Moon, Sun, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-// 1. IMPORTANTE: Importe o seu LocaleSwitcher aqui. 
+// 1. IMPORTANTE: Importe o seu LocaleSwitcher aqui.
 // Ajuste o caminho conforme a sua estrutura de pastas.
-import { LocaleSwitcher } from "@/app/_components/layout/LocaleSwitcher"; 
+import { LocaleSwitcher } from "@/app/_components/layout/LocaleSwitcher";
 import { useAuth } from "@/app/auth/authProvider";
 import { useTheme } from "@/app/theme/themeProvider";
 
 export function Sidebar() {
   // 2. CORREÇÃO: Inicialize as funções de tradução conforme o seu JSON de mensagens
   const t = useTranslations("sidebar"); // Ou o namespace que você definiu
-  const tHeader = useTranslations("header"); 
+  const tHeader = useTranslations("header");
 
   const { toggleTheme, theme } = useTheme();
   const { handleLogout } = useAuth();

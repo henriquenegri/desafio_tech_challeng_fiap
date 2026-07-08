@@ -2,8 +2,15 @@
 
 /* TEMA CLARO (Padrão) */
 :root {
-  --background: #E8F3F1;
+  --background: #e8f3f1;
   --foreground: #121413;
+  --surface-container: #ffffff;
+  --surface-input: #e2e3e1;
+  --outline-variant: #c2c5c4;
+  --primary-teal: #38a28d;
+  --primary-hover: #73d8c1;
+  --text-muted: #5a605e;
+  --alert-coral: #d34c31;
   --surface-container: #ffffff;
   --surface-input: #e2e3e1;
   --outline-variant: #c2c5c4;
@@ -16,6 +23,14 @@
 /* TEMA ESCURO */
 .dark {
   --background: #121413;
+  --foreground: #e2e3e1;
+  --surface-container: #1e201f;
+  --surface-input: #1a1c1b;
+  --outline-variant: #3e4946;
+  --primary-teal: #73d8c1;
+  --primary-hover: #38a28d;
+  --text-muted: #8e9592;
+  --alert-coral: #ffb4a3;
   --foreground: #e2e3e1;
   --surface-container: #1e201f;
   --surface-input: #1a1c1b;
@@ -53,10 +68,19 @@ body {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px var(--surface-input) inset !important;
   -webkit-text-fill-color: var(--foreground) !important;
   transition: background-color 5000s ease-in-out 0s;
+  -webkit-box-shadow: 0 0 0 30px var(--surface-input) inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 button:hover {
