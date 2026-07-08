@@ -1,22 +1,30 @@
 "use client";
-import { useAuth } from "@/app/auth/authProvider";
-import { useTheme } from "@/app/theme/themeProvider";
+
 import { Home, LogOut, Moon, Sun, User } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+
+// 1. IMPORTANTE: Importe o seu LocaleSwitcher aqui. 
+// Ajuste o caminho conforme a sua estrutura de pastas.
+import { LocaleSwitcher } from "@/app/_components/layout/LocaleSwitcher"; 
+import { useAuth } from "@/app/auth/authProvider";
+import { useTheme } from "@/app/theme/themeProvider";
 
 export function Sidebar() {
+  // 2. CORREÇÃO: Inicialize as funções de tradução conforme o seu JSON de mensagens
+  const t = useTranslations("sidebar"); // Ou o namespace que você definiu
+  const tHeader = useTranslations("header"); 
+
   const { toggleTheme, theme } = useTheme();
-  console.log(theme);
   const { handleLogout } = useAuth();
   const pathname = usePathname();
 
-  // Se estiver na página de login (raiz), não renderiza a sidebar
   if (pathname === "/") return null;
 
   return (
-    <aside className="hidden md:flex flex-col w-70 bg-surface border-r border-outline/30 sticky top-0 h-screen p-6 z-20 transition-colors duration-300">
+    <aside className="bg-surface border-outline/30 sticky top-0 z-20 hidden h-screen w-70 flex-col border-r p-6 transition-colors duration-300 md:flex">
       <div className="mb-12">
-        <h1 className="text-brand font-bold text-2xl uppercase tracking-wider leading-tight">
+        <h1 className="text-brand text-2xl leading-tight font-bold tracking-wider uppercase">
           The Digital
           <br />
           Vault
@@ -26,38 +34,40 @@ export function Sidebar() {
       <nav className="flex-1 space-y-2">
         <a
           href="#"
-          className="flex items-center gap-3 bg-brand/10 text-brand px-4 py-3 rounded-lg font-medium transition-colors"
+          className="bg-brand/10 text-brand flex items-center gap-3 rounded-lg px-4 py-3 font-medium transition-colors"
         >
-          <Home className="w-5 h-5" />
-          Início
+          <Home className="h-5 w-5" />
+          {t("home")}
         </a>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 text-muted hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 px-4 py-3 rounded-lg font-medium transition-colors"
+          className="text-muted hover:text-foreground flex w-full items-center gap-3 rounded-lg px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5"
         >
-          <LogOut className="w-5 h-5" />
-          Sair
+          <LogOut className="h-5 w-5" />
+          {t("logout")}
         </button>
       </nav>
 
-      <div className="flex items-center justify-between mt-auto pt-6 border-t border-outline/30">
+      <div className="border-outline/30 mt-auto flex items-center justify-between border-t pt-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-input border border-outline flex items-center justify-center overflow-hidden">
-            <User className="w-5 h-5 text-muted" />
+          <div className="bg-input border-outline flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border">
+            <User className="text-muted h-5 w-5" />
           </div>
-          <span className="text-sm font-medium text-foreground">
-            Minha Conta
+          <span className="text-foreground text-sm font-medium">
+            {t("myAccount")}
           </span>
         </div>
 
-        {/* Botão de Tema Desktop */}
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-lg text-muted hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground transition-colors"
-          aria-label="Alternar Tema"
-        >
-          {theme ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <LocaleSwitcher />
+          <button
+            onClick={toggleTheme}
+            className="text-muted hover:text-foreground rounded-lg p-2 transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+            aria-label={tHeader("toggleThemeAriaLabel")}
+          >
+            {theme ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
     </aside>
   );

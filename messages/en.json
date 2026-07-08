@@ -1,0 +1,150 @@
+{
+  "layout": {
+    "appName": "The Digital Vault",
+    "appNameMobile": "The Digital Vault"
+  },
+  "header": {
+    "menuAriaLabel": "Menu",
+    "toggleThemeAriaLabel": "Toggle Theme"
+  },
+  "sidebar": {
+    "home": "Home",
+    "logout": "Sign Out",
+    "myAccount": "My Account"
+  },
+  "login": {
+    "financialManagement": "Financial Management",
+    "welcomeBack": "Welcome back",
+    "accessYourAccount": "Access your financial account",
+    "emailLabel": "Email",
+    "emailPlaceholder": "your@email.com",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot your password?",
+    "invalidCredentials": "Invalid credentials. Use admin@vault.com / admin123",
+    "submitMobile": "Access Account",
+    "submitDesktop": "Sign In",
+    "noAccount": "Don't have an account?",
+    "createNow": "Create one",
+    "securityBadge": "Banking Security",
+    "encryptionBadge": "End-to-End Encryption",
+    "footer": "SECURITY & PRIVACY • © {year} THE DIGITAL VAULT"
+  },
+  "dashboard": {
+    "overview": "Overview",
+    "welcomeSubtitle": "Welcome back to your capital curation.",
+    "newTransaction": "New Transaction",
+    "fetchError": "Error fetching transactions",
+    "deleteError": "Error deleting transaction"
+  },
+  "summaryCards": {
+    "availableBalanceMobile": "Available Balance",
+    "totalBalanceDesktop": "Total Balance",
+    "loading": "Loading...",
+    "monthlyGrowth": "+ 2.4% this month",
+    "incomesThisMonth": "Income (Month)",
+    "expensesThisMonth": "Expenses (Month)"
+  },
+  "table": {
+    "description": "Description",
+    "amount": "Amount",
+    "date": "Date",
+    "config": "Actions"
+  },
+  "transactions": {
+    "recentMobile": "Recent Transactions",
+    "latestDesktop": "Latest Transactions"
+  },
+  "transactionModal": {
+    "addTitle": "Add Transaction",
+    "editTitle": "Edit Transaction",
+    "titleLabel": "Title",
+    "titlePlaceholder": "E.g. Electric Bill",
+    "amountLabel": "Amount ($)",
+    "typeLabel": "Type",
+    "typeOut": "Expense",
+    "typeIn": "Income",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Select a category",
+    "categoryFood": "Food",
+    "categoryShopping": "Shopping",
+    "categoryWork": "Work",
+    "categoryHousing": "Housing",
+    "categoryInvestments": "Investments",
+    "categoryBills": "Bills",
+    "saveNew": "Save Transaction",
+    "saveEdit": "Save Changes",
+    "saveError": "Error saving transaction",
+    "editError": "Error editing transaction"
+  },
+  "deleteModal": {
+    "title": "Delete transaction",
+    "irreversible": "This action cannot be undone.",
+    "aboutToDelete": "You are about to delete:",
+    "cancel": "Cancel",
+    "confirm": "Delete"
+  },
+  "toast": {
+    "createSuccess": "Transaction created successfully!",
+    "editSuccess": "Transaction updated successfully!",
+    "deleteSuccess": "Transaction deleted successfully!",
+    "fetchError": "Error fetching transactions",
+    "saveError": "Error saving transaction",
+    "editError": "Error editing transaction",
+    "deleteError": "Error deleting transaction"
+  },
+  "localeSwitcher": {
+    "label": "Language",
+    "ptBR": "Português",
+    "en": "English"
+  },
+  "filters": {
+    "searchPlaceholder": "Search transactions...",
+    "typeLabel": "Type",
+    "typeAll": "All types",
+    "typeIn": "Incomes",
+    "typeOut": "Expenses",
+    "categoryLabel": "Category",
+    "categoryAll": "All categories",
+    "dateRangeLabel": "Date Range",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "amountRangeLabel": "Amount Range ($)",
+    "minAmount": "Min",
+    "maxAmount": "Max",
+    "sortByLabel": "Sort by",
+    "sortDateNewest": "Newest first",
+    "sortDateOldest": "Oldest first",
+    "sortAmountHighest": "Highest amount",
+    "sortAmountLowest": "Lowest amount",
+    "sortAlphaAZ": "Alphabetical (A-Z)",
+    "sortAlphaZA": "Alphabetical (Z-A)",
+    "advancedFilters": "Advanced Filters",
+    "clearFilters": "Clear Filters",
+    "noResults": "No transactions found matching the selected filters.",
+    "activeFilters": "{count} active"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing {start}-{end} of {total} transactions",
+    "itemsPerPage": "Items per page",
+    "pageIndicator": "Page {current} of {total}"
+  },
+  "validation": {
+    "titleRequired": "Title is required",
+    "titleTooShort": "Title must be at least 3 characters",
+    "amountRequired": "Amount is required",
+    "amountPositive": "Amount must be greater than zero",
+    "categoryRequired": "Category is required",
+    "suggested": "Category suggested based on title!"
+  },
+  "attachment": {
+    "label": "Receipt / Document",
+    "uploadButton": "Choose file",
+    "changeButton": "Change",
+    "removeButton": "Remove",
+    "viewButton": "View",
+    "helperText": "Accepted formats: Images, PDF (Max. 2MB)",
+    "fileSizeError": "File exceeds 2MB limit"
+  }
+}

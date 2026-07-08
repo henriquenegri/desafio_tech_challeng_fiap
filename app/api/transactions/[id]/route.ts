@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import fs from "fs/promises";
+import { NextResponse } from "next/server";
 import path from "path";
+
 import { Transaction } from "@/app/_types/transactionTypes";
 
 const filePath = path.join(process.cwd(), "app", "utils", "transactions.json");

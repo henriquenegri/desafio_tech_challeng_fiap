@@ -14,13 +14,13 @@ export const getIcon = (name: string) => {
     case "shopping":
       return <ShoppingCart {...props} />;
     case "briefcase":
-      return <Briefcase {...props} className="w-5 h-5 text-brand" />;
+      return <Briefcase {...props} className="text-brand h-5 w-5" />;
     case "utensils":
       return <Utensils {...props} />;
     case "building":
       return <Building {...props} />;
     case "trending":
-      return <TrendingUp {...props} className="w-5 h-5 text-brand" />;
+      return <TrendingUp {...props} className="text-brand h-5 w-5" />;
     default:
       return <Zap {...props} />;
   }

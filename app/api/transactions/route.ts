@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import fs from "fs/promises";
+import { NextResponse } from "next/server";
 import path from "path";
+
 import { Transaction } from "@/app/_types/transactionTypes";
 
 const filePath = path.join(process.cwd(), "app", "utils", "transactions.json");
@@ -14,7 +15,7 @@ export async function GET() {
       success: true,
       data: transactions,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: "Erro ao buscar transações" },
       { status: 500 },
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json({ success: true, data: newTransaction });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: "Erro ao salvar transação" },
       { status: 500 },

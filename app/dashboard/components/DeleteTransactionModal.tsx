@@ -1,6 +1,8 @@
 "use client";
 
-import { X, TriangleAlert } from "lucide-react";
+import { TriangleAlert, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { Transaction } from "../../_types/transactionTypes";
 
 interface DeleteTransactionModalProps {
@@ -14,63 +16,65 @@ export function DeleteTransactionModal({
   onConfirm,
   onClose,
 }: DeleteTransactionModalProps) {
+  const t = useTranslations("deleteModal");
+
   return (
     <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
     >
-      <div className="bg-surface w-full max-w-md rounded-2xl border border-outline/50 shadow-2xl p-6 relative transition-colors duration-300">
+      <div className="bg-surface border-outline/50 relative w-full max-w-md rounded-2xl border p-6 shadow-2xl transition-colors duration-300">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-muted hover:text-foreground transition-colors"
+          className="text-muted hover:text-foreground absolute top-4 right-4 transition-colors"
         >
-          <X className="w-6 h-6" />
+          <X className="h-6 w-6" />
         </button>
 
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center shrink-0">
-            <TriangleAlert className="w-6 h-6 text-red-500" />
+        <div className="mb-4 flex items-start gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-500/10">
+            <TriangleAlert className="h-6 w-6 text-red-500" />
           </div>
 
           <div>
-            <h2 className="text-xl font-bold text-foreground transition-colors duration-300">
-              Excluir transação
+            <h2 className="text-foreground text-xl font-bold transition-colors duration-300">
+              {t("title")}
             </h2>
-            <p className="text-sm text-muted mt-1 transition-colors duration-300">
-              Essa ação não poderá ser desfeita.
+            <p className="text-muted mt-1 text-sm transition-colors duration-300">
+              {t("irreversible")}
             </p>
           </div>
         </div>
 
-        <div className="bg-input/60 rounded-xl p-4 mb-6 transition-colors duration-300">
-          <p className="text-sm text-muted transition-colors duration-300">
-            Você está prestes a excluir:
+        <div className="bg-input/60 mb-6 rounded-xl p-4 transition-colors duration-300">
+          <p className="text-muted text-sm transition-colors duration-300">
+            {t("aboutToDelete")}
           </p>
-          <p className="text-base font-semibold text-foreground mt-1 transition-colors duration-300">
+          <p className="text-foreground mt-1 text-base font-semibold transition-colors duration-300">
             {transaction.title}
           </p>
-          <p className="text-sm text-muted mt-1 transition-colors duration-300">
+          <p className="text-muted mt-1 text-sm transition-colors duration-300">
             {transaction.category} • {transaction.date}
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 border border-outline rounded-xl py-3 font-semibold text-foreground hover:bg-input transition-colors duration-300"
+            className="border-outline text-foreground hover:bg-input flex-1 rounded-xl border py-3 font-semibold transition-colors duration-300"
           >
-            Cancelar
+            {t("cancel")}
           </button>
 
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-xl py-3 font-semibold transition-colors duration-300"
+            className="flex-1 rounded-xl bg-red-500 py-3 font-semibold text-white transition-colors duration-300 hover:bg-red-600"
           >
-            Excluir
+            {t("confirm")}
           </button>
         </div>
       </div>
