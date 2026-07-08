@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -7,6 +9,8 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const DASHBOARD_URL = process.env.DASHBOARD_URL ?? "http://localhost:3001";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  outputFileTracingRoot: path.join(__dirname, "../.."),
   transpilePackages: ["@vault/ui", "@vault/shared"],
   async rewrites() {
     return [

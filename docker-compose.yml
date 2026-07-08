@@ -1,0 +1,20 @@
+services:
+  # Zona padrão: login/autenticação; roteia /dashboard e /api para a outra zona
+  home:
+    build:
+      context: .
+      dockerfile: apps/home/Dockerfile
+      args:
+        DASHBOARD_URL: http://dashboard:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dashboard
+
+  # Microfrontend do dashboard: páginas de transações + API mock
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+    ports:
+      - "3001:3001"

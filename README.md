@@ -40,6 +40,26 @@ Em produção, a URL da zona dashboard é configurável pela variável de ambien
 
 ---
 
+## Docker
+
+Cada microfrontend tem seu próprio `Dockerfile` (multi-stage, com `output: "standalone"` do Next.js, gerando imagens mínimas que rodam como usuário não-root). A orquestração dos contêineres é feita com **Docker Compose**:
+
+```bash
+docker compose up --build
+```
+
+- **home** — exposto em `http://localhost:3000` (ponto de entrada da aplicação)
+- **dashboard** — contêiner independente; a zona home o alcança pela rede interna do Compose (`http://dashboard:3001`)
+
+Cada imagem pode também ser buildada e deployada isoladamente:
+
+```bash
+docker build -f apps/home/Dockerfile -t vault-home .
+docker build -f apps/dashboard/Dockerfile -t vault-dashboard .
+```
+
+---
+
 ## Sobre o Projeto
 
 O sistema permite que o usuário gerencie suas finanças pessoais de forma simples e eficiente.
