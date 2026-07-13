@@ -2,11 +2,20 @@
   "name": "techchallenge-fiap",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@11.9.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
+    "dev": "turbo run dev",
+    "dev:home": "npm run dev --workspace=@vault/home",
+    "dev:dashboard": "npm run dev --workspace=@vault/dashboard",
+    "build": "turbo run build",
+    "build:home": "npm run build --workspace=@vault/home",
+    "build:dashboard": "npm run build --workspace=@vault/dashboard",
+    "start": "turbo run start",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -24,19 +33,7 @@
       "prettier --write"
     ]
   },
-  "dependencies": {
-    "lucide-react": "^1.8.0",
-    "next": "16.2.3",
-    "next-intl": "^4.9.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "sonner": "^2.0.7"
-  },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
     "eslint-config-prettier": "^10.1.8",
@@ -45,7 +42,7 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.3",
-    "tailwindcss": "^4",
+    "turbo": "^2.5.0",
     "typescript": "^5"
   }
 }

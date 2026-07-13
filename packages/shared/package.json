@@ -1,0 +1,15 @@
+{
+  "name": "@vault/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./routing": "./src/routing.ts",
+    "./navigation": "./src/navigation.ts",
+    "./messages/*": "./messages/*"
+  },
+  "dependencies": {
+    "next-intl": "^4.9.1"
+  }
+}
