@@ -96,5 +96,55 @@
     "label": "Idioma",
     "ptBR": "Português",
     "en": "English"
+  },
+  "filters": {
+    "searchPlaceholder": "Buscar transação...",
+    "typeLabel": "Tipo",
+    "typeAll": "Todos os tipos",
+    "typeIn": "Entradas",
+    "typeOut": "Saídas",
+    "categoryLabel": "Categoria",
+    "categoryAll": "Todas as categorias",
+    "dateRangeLabel": "Período",
+    "startDate": "Data de início",
+    "endDate": "Data de término",
+    "amountRangeLabel": "Faixa de Valor (R$)",
+    "minAmount": "Mínimo",
+    "maxAmount": "Máximo",
+    "sortByLabel": "Ordenar por",
+    "sortDateNewest": "Mais recente",
+    "sortDateOldest": "Mais antiga",
+    "sortAmountHighest": "Maior valor",
+    "sortAmountLowest": "Menor valor",
+    "sortAlphaAZ": "Alfabeto (A-Z)",
+    "sortAlphaZA": "Alfabeto (Z-A)",
+    "advancedFilters": "Filtros Avançados",
+    "clearFilters": "Limpar Filtros",
+    "noResults": "Nenhuma transação encontrada com os filtros selecionados.",
+    "activeFilters": "{count} ativo(s)"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próxima",
+    "showing": "Exibindo {start}-{end} de {total} transações",
+    "itemsPerPage": "Itens por página",
+    "pageIndicator": "Página {current} de {total}"
+  },
+  "validation": {
+    "titleRequired": "O título é obrigatório",
+    "titleTooShort": "O título deve ter pelo menos 3 caracteres",
+    "amountRequired": "O valor é obrigatório",
+    "amountPositive": "O valor deve ser maior que zero",
+    "categoryRequired": "A categoria é obrigatória",
+    "suggested": "Categoria sugerida com base no título!"
+  },
+  "attachment": {
+    "label": "Recibo / Documento",
+    "uploadButton": "Escolher arquivo",
+    "changeButton": "Alterar",
+    "removeButton": "Remover",
+    "viewButton": "Visualizar",
+    "helperText": "Formatos aceitos: Imagens, PDF (Máx. 2MB)",
+    "fileSizeError": "O arquivo excede o limite de 2MB"
   }
 }

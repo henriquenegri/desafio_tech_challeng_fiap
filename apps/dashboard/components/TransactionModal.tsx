@@ -1,7 +1,7 @@
 "use client";
 
 import { Transaction } from "@vault/shared";
-import { X } from "lucide-react";
+import { Paperclip, Trash2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -25,6 +25,102 @@ const categoryOptions = [
   { value: "Contas", iconName: "zap", labelKey: "categoryBills" },
 ] as const;
 
+const categoryKeywords: { value: string; keywords: string[] }[] = [
+  {
+    value: "Alimentação",
+    keywords: [
+      "mercado",
+      "almoço",
+      "jantar",
+      "restaurante",
+      "pizza",
+      "lanche",
+      "comida",
+      "supermercado",
+      "feira",
+      "padaria",
+      "mcdonald",
+      "burger",
+    ],
+  },
+  {
+    value: "Compras",
+    keywords: [
+      "shopping",
+      "roupas",
+      "tênis",
+      "camisa",
+      "amazon",
+      "loja",
+      "eletronico",
+      "livro",
+      "presente",
+      "mercadolivre",
+    ],
+  },
+  {
+    value: "Trabalho",
+    keywords: [
+      "salário",
+      "freela",
+      "bônus",
+      "job",
+      "projeto",
+      "receita",
+      "pagamento",
+      "comissão",
+    ],
+  },
+  {
+    value: "Moradia",
+    keywords: [
+      "aluguel",
+      "condomínio",
+      "iptu",
+      "reforma",
+      "casa",
+      "apartamento",
+      "móveis",
+      "decor",
+    ],
+  },
+  {
+    value: "Investimentos",
+    keywords: [
+      "ações",
+      "fiis",
+      "tesouro",
+      "investimento",
+      "poupança",
+      "xp",
+      "rendimento",
+      "inter",
+      "cdi",
+      "dividendos",
+    ],
+  },
+  {
+    value: "Contas",
+    keywords: [
+      "luz",
+      "água",
+      "gás",
+      "telefone",
+      "internet",
+      "energia",
+      "boleto",
+      "multa",
+      "fatura",
+      "seguro",
+      "coelba",
+      "sabesp",
+      "net",
+      "claro",
+      "vivo",
+    ],
+  },
+];
+
 function createEmptyTransaction(): Transaction {
   return {
     id: crypto.randomUUID(),
@@ -34,6 +130,7 @@ function createEmptyTransaction(): Transaction {
     type: "in",
     date: new Date().toLocaleDateString("pt-BR"),
     iconName: "",
+    attachment: null,
   };
 }
 
@@ -44,13 +141,128 @@ export function TransactionModal({
 }: TransactionModalProps) {
   const t = useTranslations("transactionModal");
   const tToast = useTranslations("toast");
+  const tValidation = useTranslations("validation");
+  const tAttachment = useTranslations("attachment");
+
   const [transactionData, setTransactionData] = useState<Transaction>(
     () => transaction ?? createEmptyTransaction(),
   );
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSuggested, setIsSuggested] = useState(false);
 
   const isEditing = Boolean(transaction);
 
+  const suggestCategory = (
+    title: string,
+  ): { value: string; iconName: string } | null => {
+    if (!title.trim()) return null;
+    const lowerTitle = title.toLowerCase();
+    for (const cat of categoryKeywords) {
+      for (const keyword of cat.keywords) {
+        if (lowerTitle.includes(keyword)) {
+          const matchedOption = categoryOptions.find(
+            (opt) => opt.value === cat.value,
+          );
+          if (matchedOption) {
+            return {
+              value: matchedOption.value,
+              iconName: matchedOption.iconName,
+            };
+          }
+        }
+      }
+    }
+    return null;
+  };
+
+  const handleTitleChange = (val: string) => {
+    setTransactionData((prev) => {
+      const updated = { ...prev, title: val };
+      const suggestion = suggestCategory(val);
+      if (suggestion) {
+        setIsSuggested(true);
+        setErrors((prevErr) => {
+          const newErrors = { ...prevErr };
+          delete newErrors.category;
+          return newErrors;
+        });
+        return {
+          ...updated,
+          category: suggestion.value,
+          iconName: suggestion.iconName,
+        };
+      } else {
+        setIsSuggested(false);
+      }
+      return updated;
+    });
+
+    if (val.trim().length >= 3) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.title;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error(tAttachment("fileSizeError"));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setTransactionData((prev) => ({
+        ...prev,
+        attachment: {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          dataUrl: reader.result as string,
+        },
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveFile = () => {
+    setTransactionData((prev) => ({
+      ...prev,
+      attachment: null,
+    }));
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    if (!transactionData.title.trim()) {
+      newErrors.title = "titleRequired";
+    } else if (transactionData.title.trim().length < 3) {
+      newErrors.title = "titleTooShort";
+    }
+
+    if (!transactionData.amount || Number(transactionData.amount) <= 0) {
+      newErrors.amount = "amountPositive";
+    }
+
+    if (!transactionData.category) {
+      newErrors.category = "categoryRequired";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   async function handleSubmit() {
+    if (!validate()) {
+      toast.error(tToast("saveError"));
+      return;
+    }
+
     try {
       const url = isEditing
         ? `/api/transactions/${transactionData.id}`
@@ -91,7 +303,7 @@ export function TransactionModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
     >
@@ -114,46 +326,64 @@ export function TransactionModal({
           }}
           className="space-y-4"
         >
+          {/* Title input */}
           <div>
             <label className="text-foreground mb-1 block text-sm font-medium">
               {t("titleLabel")}
             </label>
             <input
-              required
               value={transactionData.title}
-              onChange={(e) =>
-                setTransactionData((prev) => ({
-                  ...prev,
-                  title: e.target.value,
-                }))
-              }
+              onChange={(e) => handleTitleChange(e.target.value)}
               type="text"
-              className="bg-input border-outline text-foreground w-full rounded-lg border px-4 py-2.5 outline-none"
+              className={`bg-input text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 transition-colors outline-none focus:ring-1 ${
+                errors.title ? "border-alert" : "border-outline"
+              }`}
               placeholder={t("titlePlaceholder")}
             />
+            {errors.title && (
+              <p className="text-alert mt-1 text-xs font-semibold transition-all">
+                {tValidation(errors.title)}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            {/* Amount Input */}
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
                 {t("amountLabel")}
               </label>
               <input
-                required
-                value={transactionData.amount}
-                onChange={(e) =>
+                value={transactionData.amount || ""}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
                   setTransactionData((prev) => ({
                     ...prev,
-                    amount: Number(e.target.value),
-                  }))
-                }
+                    amount: val,
+                  }));
+                  if (val > 0) {
+                    setErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.amount;
+                      return newErrors;
+                    });
+                  }
+                }}
                 type="number"
                 step="0.01"
-                className="bg-input border-outline text-foreground w-full rounded-lg border px-4 py-2.5 outline-none"
+                className={`bg-input text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 transition-colors outline-none focus:ring-1 ${
+                  errors.amount ? "border-alert" : "border-outline"
+                }`}
                 placeholder="0.00"
               />
+              {errors.amount && (
+                <p className="text-alert mt-1 text-xs font-semibold transition-all">
+                  {tValidation(errors.amount)}
+                </p>
+              )}
             </div>
 
+            {/* Type Input */}
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
                 {t("typeLabel")}
@@ -166,7 +396,7 @@ export function TransactionModal({
                     type: e.target.value as Transaction["type"],
                   }))
                 }
-                className="bg-input border-outline text-foreground w-full rounded-lg border px-4 py-2.5 outline-none"
+                className="bg-input border-outline text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-1"
               >
                 <option value="out">{t("typeOut")}</option>
                 <option value="in">{t("typeIn")}</option>
@@ -174,24 +404,35 @@ export function TransactionModal({
             </div>
           </div>
 
+          {/* Category Input */}
           <div>
             <label className="text-foreground mb-1 block text-sm font-medium">
               {t("categoryLabel")}
             </label>
             <select
-              required
               value={transactionData.category}
               onChange={(e) => {
+                const val = e.target.value;
                 const selected = categoryOptions.find(
-                  (item) => item.value === e.target.value,
+                  (item) => item.value === val,
                 );
                 setTransactionData((prev) => ({
                   ...prev,
-                  category: e.target.value,
+                  category: val,
                   iconName: selected?.iconName ?? "",
                 }));
+                setIsSuggested(false);
+                if (val) {
+                  setErrors((prev) => {
+                    const newErrors = { ...prev };
+                    delete newErrors.category;
+                    return newErrors;
+                  });
+                }
               }}
-              className="bg-input border-outline text-foreground w-full rounded-lg border px-4 py-2.5 outline-none"
+              className={`bg-input text-foreground focus:ring-brand/35 w-full rounded-lg border px-4 py-2.5 transition-colors outline-none focus:ring-1 ${
+                errors.category ? "border-alert" : "border-outline"
+              }`}
             >
               <option value="">{t("categoryPlaceholder")}</option>
               {categoryOptions.map((item) => (
@@ -200,11 +441,66 @@ export function TransactionModal({
                 </option>
               ))}
             </select>
+            {errors.category && (
+              <p className="text-alert mt-1 text-xs font-semibold transition-all">
+                {tValidation(errors.category)}
+              </p>
+            )}
+            {isSuggested && !errors.category && (
+              <p className="text-brand mt-1 flex animate-pulse items-center gap-1 text-xs font-semibold">
+                <span>✨ {tValidation("suggested")}</span>
+              </p>
+            )}
+          </div>
+
+          {/* Attachments Upload Field */}
+          <div>
+            <label className="text-foreground mb-1 block text-sm font-medium">
+              {tAttachment("label")}
+            </label>
+            {transactionData.attachment ? (
+              <div className="bg-input/40 border-outline/40 flex items-center justify-between rounded-xl border p-3.5 transition-colors">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <Paperclip className="text-brand h-5 w-5 shrink-0" />
+                  <div className="overflow-hidden">
+                    <p className="text-foreground truncate text-xs font-semibold">
+                      {transactionData.attachment.name}
+                    </p>
+                    <p className="text-muted mt-0.5 text-[10px]">
+                      {(transactionData.attachment.size / 1024).toFixed(1)} KB
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveFile}
+                  className="text-muted hover:text-alert cursor-pointer rounded-lg p-1.5 transition-colors"
+                >
+                  <Trash2 className="h-4.5 w-4.5" />
+                </button>
+              </div>
+            ) : (
+              <div className="border-outline/50 hover:border-brand/40 bg-input/10 relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed px-4 py-5 text-center transition-colors">
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                />
+                <Paperclip className="text-muted mb-1 h-5 w-5 opacity-60" />
+                <p className="text-brand text-xs font-bold">
+                  {tAttachment("uploadButton")}
+                </p>
+                <p className="text-muted mt-0.5 text-[10px]">
+                  {tAttachment("helperText")}
+                </p>
+              </div>
+            )}
           </div>
 
           <button
             type="submit"
-            className="bg-brand hover:bg-brand-hover text-background mt-2 w-full rounded-xl py-3 font-bold transition-colors"
+            className="bg-brand hover:bg-brand-hover text-background mt-4 w-full cursor-pointer rounded-xl py-3 font-bold transition-colors"
           >
             {isEditing ? t("saveEdit") : t("saveNew")}
           </button>

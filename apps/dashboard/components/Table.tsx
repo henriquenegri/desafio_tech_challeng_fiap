@@ -2,7 +2,7 @@
 
 import { Transaction } from "@vault/shared";
 import { getIcon } from "@vault/ui";
-import { Pencil, Trash2 } from "lucide-react";
+import { Paperclip, Pencil, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 
 interface TableProps {
@@ -13,6 +13,7 @@ interface TableProps {
 
 export function Table({ transactions, handleEdit, handleDelete }: TableProps) {
   const t = useTranslations("table");
+  const tAttachment = useTranslations("attachment");
   const format = useFormatter();
 
   function formatCurrency(value: number) {
@@ -73,9 +74,29 @@ export function Table({ transactions, handleEdit, handleDelete }: TableProps) {
 
             <td className="block px-4 pt-2 pb-4 text-left align-middle md:table-cell md:px-8 md:py-6 md:text-right">
               <div className="flex items-center gap-2 md:justify-end">
+                {tx.attachment && (
+                  <button
+                    type="button"
+                    className="hover:bg-input text-muted hover:text-brand cursor-pointer rounded-lg p-2.5 transition-colors duration-300"
+                    onClick={() => {
+                      if (tx.attachment?.dataUrl) {
+                        const newTab = window.open();
+                        if (newTab) {
+                          newTab.document.write(
+                            `<iframe src="${tx.attachment.dataUrl}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`,
+                          );
+                        }
+                      }
+                    }}
+                    title={tAttachment("viewButton")}
+                  >
+                    <Paperclip className="h-4 w-4" />
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  className="hover:bg-input text-muted hover:text-foreground rounded-lg p-2.5 transition-colors duration-300"
+                  className="hover:bg-input text-muted hover:text-foreground cursor-pointer rounded-lg p-2.5 transition-colors duration-300"
                   onClick={() => handleEdit(tx)}
                 >
                   <Pencil className="h-4 w-4" />
@@ -83,7 +104,7 @@ export function Table({ transactions, handleEdit, handleDelete }: TableProps) {
 
                 <button
                   type="button"
-                  className="text-muted rounded-lg p-2.5 transition-colors duration-300 hover:bg-red-500/10 hover:text-red-500"
+                  className="text-muted cursor-pointer rounded-lg p-2.5 transition-colors duration-300 hover:bg-red-500/10 hover:text-red-500"
                   onClick={() => handleDelete(tx)}
                 >
                   <Trash2 className="h-4 w-4" />

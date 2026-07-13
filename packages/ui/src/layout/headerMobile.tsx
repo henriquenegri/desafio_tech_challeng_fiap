@@ -1,15 +1,21 @@
 "use client";
 
 import { Bell, Menu, Moon, Sun, User } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { useTheme } from "../themeProvider";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function HeaderMobile() {
-  const { toggleTheme, theme } = useTheme();
   const t = useTranslations("header");
   const tLayout = useTranslations("layout");
+  const { toggleTheme, theme } = useTheme();
+
+  const pathname = usePathname();
+
+  // Página de login (zona home): sem chrome de navegação
+  if (pathname === "/" || pathname === "/en") return null;
 
   return (
     <header className="bg-background sticky top-0 z-20 flex items-center justify-between p-6 transition-colors duration-300 md:hidden">
@@ -21,7 +27,7 @@ export function HeaderMobile() {
           <Menu className="h-6 w-6" />
         </button>
         <span className="text-brand text-xl font-semibold tracking-tight">
-          {tLayout("appName")}
+          {tLayout("appNameMobile")}
         </span>
       </div>
       <div className="flex items-center gap-3">

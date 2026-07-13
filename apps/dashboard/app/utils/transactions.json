@@ -1,5 +1,23 @@
 [
   {
+    "id": "58722293-e262-4ce7-a2db-0ec7d2344ba9",
+    "title": "Multa",
+    "category": "Contas",
+    "amount": 250,
+    "type": "out",
+    "date": "22/04/2026",
+    "iconName": "zap"
+  },
+  {
+    "id": "9d1d771e-9e80-48cf-898b-10814e909db2",
+    "title": "Internet",
+    "category": "Moradia",
+    "amount": 100,
+    "type": "out",
+    "date": "22/04/2026",
+    "iconName": "building"
+  },
+  {
     "id": "7cd30371-db4b-490c-a118-ad3ca6c33fd7",
     "title": "Freela1",
     "category": "Trabalho",
@@ -7,14 +25,5 @@
     "type": "in",
     "date": "20/04/2026",
     "iconName": "briefcase"
-  },
-  {
-    "id": "18d645f0-b42a-456f-baa4-d2e00d0d5944",
-    "title": "Compras Shoppings",
-    "category": "Compras",
-    "amount": 200,
-    "type": "out",
-    "date": "20/04/2026",
-    "iconName": "shopping"
   }
 ]

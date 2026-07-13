@@ -96,5 +96,55 @@
     "label": "Language",
     "ptBR": "Português",
     "en": "English"
+  },
+  "filters": {
+    "searchPlaceholder": "Search transactions...",
+    "typeLabel": "Type",
+    "typeAll": "All types",
+    "typeIn": "Incomes",
+    "typeOut": "Expenses",
+    "categoryLabel": "Category",
+    "categoryAll": "All categories",
+    "dateRangeLabel": "Date Range",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "amountRangeLabel": "Amount Range ($)",
+    "minAmount": "Min",
+    "maxAmount": "Max",
+    "sortByLabel": "Sort by",
+    "sortDateNewest": "Newest first",
+    "sortDateOldest": "Oldest first",
+    "sortAmountHighest": "Highest amount",
+    "sortAmountLowest": "Lowest amount",
+    "sortAlphaAZ": "Alphabetical (A-Z)",
+    "sortAlphaZA": "Alphabetical (Z-A)",
+    "advancedFilters": "Advanced Filters",
+    "clearFilters": "Clear Filters",
+    "noResults": "No transactions found matching the selected filters.",
+    "activeFilters": "{count} active"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing {start}-{end} of {total} transactions",
+    "itemsPerPage": "Items per page",
+    "pageIndicator": "Page {current} of {total}"
+  },
+  "validation": {
+    "titleRequired": "Title is required",
+    "titleTooShort": "Title must be at least 3 characters",
+    "amountRequired": "Amount is required",
+    "amountPositive": "Amount must be greater than zero",
+    "categoryRequired": "Category is required",
+    "suggested": "Category suggested based on title!"
+  },
+  "attachment": {
+    "label": "Receipt / Document",
+    "uploadButton": "Choose file",
+    "changeButton": "Change",
+    "removeButton": "Remove",
+    "viewButton": "View",
+    "helperText": "Accepted formats: Images, PDF (Max. 2MB)",
+    "fileSizeError": "File exceeds 2MB limit"
   }
 }

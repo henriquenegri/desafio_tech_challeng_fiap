@@ -12,7 +12,7 @@ import {
 } from "react";
 
 type AuthContextData = {
-  handleLogin: (email: string, password: string) => void;
+  handleLogin: (email: string, password: string) => boolean;
   handleLogout: () => void;
   isAuthenticated: boolean;
 };
@@ -47,7 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         document.cookie = `auth_token=true; path=/; max-age=${60 * 60 * 24}`;
         setIsAuthenticated(true);
         window.location.assign(`${localePrefix}/dashboard`);
+        return true;
       }
+      return false;
     },
     [localePrefix],
   );

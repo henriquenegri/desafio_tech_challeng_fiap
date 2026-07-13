@@ -1,5 +1,7 @@
 "use client";
+
 import { Home, LogOut, Moon, Sun, User } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { useAuth } from "../authProvider";
@@ -7,10 +9,15 @@ import { useTheme } from "../themeProvider";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function Sidebar() {
-  const { toggleTheme, theme } = useTheme();
-  const { handleLogout, isAuthenticated } = useAuth();
   const t = useTranslations("sidebar");
   const tHeader = useTranslations("header");
+
+  const { toggleTheme, theme } = useTheme();
+  const { handleLogout } = useAuth();
+  const pathname = usePathname();
+
+  // Página de login (zona home): sem chrome de navegação
+  if (pathname === "/" || pathname === "/en") return null;
 
   return (
     <aside className="bg-surface border-outline/30 sticky top-0 z-20 hidden h-screen w-70 flex-col border-r p-6 transition-colors duration-300 md:flex">
@@ -30,15 +37,13 @@ export function Sidebar() {
           <Home className="h-5 w-5" />
           {t("home")}
         </a>
-        {isAuthenticated && (
-          <button
-            onClick={handleLogout}
-            className="text-muted hover:text-foreground flex w-full items-center gap-3 rounded-lg px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5"
-          >
-            <LogOut className="h-5 w-5" />
-            {t("logout")}
-          </button>
-        )}
+        <button
+          onClick={handleLogout}
+          className="text-muted hover:text-foreground flex w-full items-center gap-3 rounded-lg px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+        >
+          <LogOut className="h-5 w-5" />
+          {t("logout")}
+        </button>
       </nav>
 
       <div className="border-outline/30 mt-auto flex items-center justify-between border-t pt-6">
