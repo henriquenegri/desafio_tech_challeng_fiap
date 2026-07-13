@@ -1,5 +1,12 @@
 export type TransactionType = "in" | "out";
 
+export interface TransactionAttachment {
+  name: string;
+  type: string;
+  size: number;
+  dataUrl: string;
+}
+
 export interface Transaction {
   id: string;
   title: string;
@@ -8,4 +15,5 @@ export interface Transaction {
   type: TransactionType;
   date: string;
   iconName: string;
+  attachment?: TransactionAttachment | null;
 }

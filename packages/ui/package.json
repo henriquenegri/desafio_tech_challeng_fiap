@@ -13,7 +13,7 @@
     "sonner": "^2.0.7"
   },
   "peerDependencies": {
-    "next-intl": "^4.9.1",
+    "next-intl": "^4.11.0",
     "react": "^19.0.0"
   }
 }
