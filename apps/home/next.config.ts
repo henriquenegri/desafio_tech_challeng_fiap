@@ -5,8 +5,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
-// Zona default do multi-zone: roteia os paths do dashboard para a outra zona
-const DASHBOARD_URL = process.env.DASHBOARD_URL ?? "http://localhost:3001";
+// Zona default do multi-zone: roteia os paths do dashboard para a outra zona.
+// A barra final é removida para o destino dos rewrites não virar "//dashboard".
+const DASHBOARD_URL = (
+  process.env.DASHBOARD_URL ?? "http://localhost:3001"
+).replace(/\/+$/, "");
 
 const nextConfig: NextConfig = {
   output: "standalone",

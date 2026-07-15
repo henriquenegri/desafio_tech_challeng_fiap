@@ -3,11 +3,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["DASHBOARD_URL", "API_URL"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["DASHBOARD_URL", "API_URL"]
     },
     "start": {
       "cache": false,
