@@ -55,25 +55,23 @@ A aplicação é dividida em **microfrontends independentes**, usando [Multi-Zon
 
 ## 🐳 Como Rodar o Projeto com Docker (Recomendado)
 
-A orquestração dos contêineres do nosso **Frontend** é feita com **Docker Compose**.
-
-### 1. Preparar a API (Backend)
-
-Para rodar para avaliação, **primeiramente inicie a API do professor (Backend)** na sua máquina, garantindo que ela fique rodando na porta padrão `3000`.
-
-### 2. Iniciar os Containers do Frontend
-
-Com a API rodando, inicie o nosso ecossistema a partir da raiz deste projeto:
+Toda a aplicação — API (Backend), zona home e zona dashboard — é orquestrada pelo **Docker Compose**. Um único comando sobe o ecossistema completo, a partir da raiz do projeto:
 
 ```bash
 docker compose up --build
 ```
 
-### O que o Docker Compose faz:
+> ⚠️ Certifique-se de que as portas `3000`, `3001` e `3333` estejam livres (não suba a API manualmente antes — o Compose já faz isso e a porta 3000 entraria em conflito).
 
-- Sobe a nossa interface principal no contêiner `home` e a expõe na porta **`http://localhost:3333`**.
-- Sobe o microfrontend interno no contêiner `dashboard`.
-- Configura a rede (`host.docker.internal` ou `network_mode: host`) para permitir que os frontends dentro do Docker se comuniquem com a API do professor que está rodando na sua máquina host de forma transparente.
+### O que o Docker Compose sobe
+
+- **`api`** — a API do professor (Backend), exposta em `http://localhost:3000` (documentação Swagger em `/docs`).
+- **`dashboard`** — o microfrontend do painel de transações, na porta `3001`.
+- **`home`** — a interface principal (login/registro), exposta em **`http://localhost:3333`** ← ponto de entrada da aplicação.
+
+Os contêineres se comunicam pela rede interna do Compose (`home` → `dashboard` via rewrites, e os frontends → API via `http://api:3000`).
+
+> 💡 A API roda com MongoDB **em memória**: os dados (usuários e transações) são zerados quando os contêineres reiniciam. Crie sua conta em `/register` na primeira utilização.
 
 ---
 
@@ -81,25 +79,31 @@ docker compose up --build
 
 Caso prefira rodar o ambiente de desenvolvimento localmente sem o Docker:
 
-### 1. Preparar e rodar a API
+### 1. Instalar dependências
 
-Certifique-se de que a API Backend do professor já esteja rodando na porta `3000`.
-
-### 2. Instalar dependências do Frontend
-
-Na raiz deste projeto:
+Na raiz do projeto (instala as dependências de todos os workspaces, incluindo a API):
 
 ```bash
 npm install
 ```
 
-### 3. Executar o projeto (todas as zonas frontends)
+### 2. Configurar a URL da API para os BFFs
+
+As rotas de BFF das zonas leem a variável `API_URL`. Crie um arquivo `.env.local` em **`apps/home`** e outro em **`apps/dashboard`**, ambos com o conteúdo:
+
+```bash
+API_URL=http://localhost:3000
+```
+
+### 3. Executar o projeto
 
 ```bash
 npm run dev
 ```
 
-A aplicação frontend estará disponível em:
-👉 **http://localhost:3333**
+Este comando sobe **tudo de uma vez** via Turborepo: a API na porta `3000` (com MongoDB em memória), a zona dashboard na `3001` e a zona home na `3333`. Não é necessário iniciar a API separadamente.
 
-_(Obs: mantivemos a credencial `admin@vault.com` / `admin123` chumbada no código como fallback para facilitar os testes, caso não queira criar um novo registro)._
+A aplicação estará disponível em:
+👉 **<http://localhost:3333>**
+
+_(Obs: o login exige um usuário cadastrado — crie sua conta pela tela de registro em `/register`. Como o banco de desenvolvimento é em memória, os usuários são zerados a cada reinício da API.)_
