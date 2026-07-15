@@ -20,6 +20,21 @@ export function Table({ transactions, handleEdit, handleDelete }: TableProps) {
     return format.number(value, { style: "currency", currency: "BRL" });
   }
 
+  function formatDate(dateStr: string) {
+    try {
+      return new Date(dateStr).toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    } catch {
+      return dateStr;
+    }
+  }
+
   return (
     <table className="w-full border-collapse">
       <thead className="hidden md:table-header-group">
@@ -50,7 +65,7 @@ export function Table({ transactions, handleEdit, handleDelete }: TableProps) {
 
                   <p className="text-muted mt-0.5 text-xs transition-colors duration-300 md:text-sm">
                     {tx.category}
-                    <span className="md:hidden"> • {tx.date}</span>
+                    <span className="md:hidden"> • {formatDate(tx.date)}</span>
                   </p>
                 </div>
               </div>
@@ -68,7 +83,7 @@ export function Table({ transactions, handleEdit, handleDelete }: TableProps) {
 
             <td className="hidden px-8 py-6 text-right align-middle md:table-cell">
               <span className="text-muted text-sm transition-colors duration-300 md:text-base">
-                {tx.date}
+                {formatDate(tx.date)}
               </span>
             </td>
 

@@ -32,13 +32,15 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
+# Copy standalone output - this includes apps/home/server.js
 COPY --from=builder --chown=nextjs:nodejs /app/apps/home/.next/standalone ./
+# Copy static assets
 COPY --from=builder --chown=nextjs:nodejs /app/apps/home/.next/static ./apps/home/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/home/public ./apps/home/public
 
 USER nextjs
-EXPOSE 3000
-ENV PORT=3000
+EXPOSE 3333
+ENV PORT=3333
 ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "apps/home/server.js"]

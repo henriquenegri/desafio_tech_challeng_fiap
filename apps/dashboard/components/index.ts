@@ -6,3 +6,8 @@ export * from "./TransactionFilters";
 export * from "./TransactionModal";
 export * from "./TransactionPagination";
 export * from "./TransactionsSection";
+export * from "./widgets/CardsWidget";
+export * from "./widgets/FinancialChartWidget";
+export * from "./widgets/SavingsGoalWidget";
+export * from "./widgets/SpendingAlertWidget";
+export * from "./widgets/WidgetManagerModal";

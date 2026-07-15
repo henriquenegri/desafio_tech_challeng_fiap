@@ -60,10 +60,9 @@ export function TransactionsSection({
     ].filter(Boolean).length;
   }, [filters]);
 
-  // Parse Portuguese format date DD/MM/YYYY into JS Date
+  // Parse ISO date string into JS Date
   const parseDate = (dateStr: string): Date => {
-    const [day, month, year] = dateStr.split("/").map(Number);
-    return new Date(year, month - 1, day);
+    return new Date(dateStr);
   };
 
   const processedTransactions = useMemo(() => {

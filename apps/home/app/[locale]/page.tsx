@@ -11,11 +11,12 @@ import {
   ShieldCheck,
   Wallet,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 export default function LoginPage() {
   const { handleLogin } = useAuth();
+  const locale = useLocale();
   const t = useTranslations("login");
   const tLayout = useTranslations("layout");
   const [email, setEmail] = useState("");
@@ -23,15 +24,14 @@ export default function LoginPage() {
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const ok = email === "admin@vault.com" && password === "admin123";
-    if (!ok) {
-      setError(true);
-      return;
-    }
     setError(false);
-    handleLogin(email, password);
+
+    const success = await handleLogin(email, password);
+    if (!success) {
+      setError(true);
+    }
   }
 
   return (
@@ -95,12 +95,6 @@ export default function LoginPage() {
                 >
                   {t("passwordLabel")}
                 </label>
-                <a
-                  href="#"
-                  className="text-brand hover:text-brand-hover focus:ring-brand focus:ring-offset-surface rounded-sm text-xs font-medium transition-colors focus:underline focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                >
-                  {t("forgotPassword")}
-                </a>
               </div>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
@@ -146,11 +140,11 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="border-outline/50 mt-8 border-t pt-6 text-center md:hidden">
+          <div className="border-outline/50 mt-8 border-t pt-6 text-center">
             <p className="text-muted text-sm">
               {t("noAccount")}{" "}
               <a
-                href="#"
+                href={`/${locale}/register`}
                 className="text-brand hover:text-brand-hover font-medium focus:underline focus:outline-none"
               >
                 {t("createNow")}

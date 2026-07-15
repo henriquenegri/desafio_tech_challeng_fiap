@@ -4,6 +4,8 @@ import { Transaction } from "@vault/shared";
 import { TriangleAlert, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+
 interface DeleteTransactionModalProps {
   transaction: Transaction;
   onConfirm: () => void;
@@ -17,28 +19,53 @@ export function DeleteTransactionModal({
 }: DeleteTransactionModalProps) {
   const t = useTranslations("deleteModal");
 
+  useEscapeKey(onClose);
+
+  function formatDate(dateStr: string) {
+    try {
+      return new Date(dateStr).toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    } catch {
+      return dateStr;
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
+      aria-labelledby="delete-modal-title"
     >
       <div className="bg-surface border-outline/50 relative w-full max-w-md rounded-2xl border p-6 shadow-2xl transition-colors duration-300">
         <button
           type="button"
           onClick={onClose}
+          aria-label="Fechar"
           className="text-muted hover:text-foreground absolute top-4 right-4 transition-colors"
         >
-          <X className="h-6 w-6" />
+          <X className="h-6 w-6" aria-hidden="true" />
         </button>
 
         <div className="mb-4 flex items-start gap-3">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-500/10">
-            <TriangleAlert className="h-6 w-6 text-red-500" />
+            <TriangleAlert
+              className="h-6 w-6 text-red-500"
+              aria-hidden="true"
+            />
           </div>
 
           <div>
-            <h2 className="text-foreground text-xl font-bold transition-colors duration-300">
+            <h2
+              id="delete-modal-title"
+              className="text-foreground text-xl font-bold transition-colors duration-300"
+            >
               {t("title")}
             </h2>
             <p className="text-muted mt-1 text-sm transition-colors duration-300">
@@ -55,7 +82,7 @@ export function DeleteTransactionModal({
             {transaction.title}
           </p>
           <p className="text-muted mt-1 text-sm transition-colors duration-300">
-            {transaction.category} • {transaction.date}
+            {transaction.category} • {formatDate(transaction.date)}
           </p>
         </div>
 

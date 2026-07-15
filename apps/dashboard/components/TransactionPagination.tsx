@@ -36,10 +36,14 @@ export function TransactionPagination({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         {/* Page size dropdown */}
         <div className="flex items-center gap-2">
-          <label className="text-muted text-xs font-medium md:text-sm">
+          <label
+            htmlFor="items-per-page"
+            className="text-muted text-xs font-medium md:text-sm"
+          >
             {t("itemsPerPage")}:
           </label>
           <select
+            id="items-per-page"
             value={itemsPerPage}
             onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
             className="bg-input border-outline/55 text-foreground focus:border-brand rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors duration-300 outline-none"
@@ -63,13 +67,14 @@ export function TransactionPagination({
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          aria-label={t("previous")}
           className={`border-outline/40 flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all duration-300 ${
             currentPage === 1
               ? "text-muted cursor-not-allowed opacity-40"
               : "bg-surface text-foreground hover:bg-input"
           }`}
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           <span className="xs:inline hidden">{t("previous")}</span>
         </button>
 
@@ -79,6 +84,8 @@ export function TransactionPagination({
             <button
               key={page}
               type="button"
+              aria-label={`Página ${page}`}
+              aria-current={page === currentPage ? "page" : undefined}
               onClick={() => onPageChange(page)}
               className={`flex h-9 min-w-[36px] items-center justify-center rounded-xl text-xs font-bold transition-all duration-300 ${
                 page === currentPage
@@ -101,6 +108,7 @@ export function TransactionPagination({
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          aria-label={t("next")}
           className={`border-outline/40 flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all duration-300 ${
             currentPage === totalPages
               ? "text-muted cursor-not-allowed opacity-40"
@@ -108,7 +116,7 @@ export function TransactionPagination({
           }`}
         >
           <span className="xs:inline hidden">{t("next")}</span>
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
     </div>

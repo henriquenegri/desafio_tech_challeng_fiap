@@ -1,5 +1,15 @@
 services:
-  # Zona padrão: login/autenticação; roteia /dashboard e /api para a outra zona
+  # API do professor (compilada localmente)
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: DockerFile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+
+  # Zona padrão: login/autenticação/registro; roteia /dashboard para a outra zona
   home:
     build:
       context: .
@@ -7,14 +17,23 @@ services:
       args:
         DASHBOARD_URL: http://dashboard:3001
     ports:
-      - "3000:3000"
+      - "3333:3333"
+    environment:
+      - API_URL=http://api:3000
     depends_on:
       - dashboard
+      - api
 
-  # Microfrontend do dashboard: páginas de transações + API mock
+  # Microfrontend do dashboard: páginas de transações integradas à API real
   dashboard:
     build:
       context: .
       dockerfile: apps/dashboard/Dockerfile
     ports:
       - "3001:3001"
+    environment:
+      - API_URL=http://api:3000
+    depends_on:
+      - api
+
+

@@ -1,13 +1,7 @@
 import "@/app/globals.css";
 
 import { routing } from "@vault/shared/routing";
-import {
-  AuthProvider,
-  HeaderMobile,
-  Sidebar,
-  ThemeProvider,
-  ToasterProvider,
-} from "@vault/ui";
+import { AuthProvider, ThemeProvider, ToasterProvider } from "@vault/ui";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
@@ -64,8 +58,6 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           <AuthProvider>
             <body className="flex flex-col md:flex-row">
-              <HeaderMobile />
-              <Sidebar />
               {children}
               <ToasterProvider />
             </body>
