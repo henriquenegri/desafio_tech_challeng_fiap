@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+
 interface TransactionModalProps {
   transaction: Transaction | null;
   setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
@@ -128,7 +130,7 @@ function createEmptyTransaction(): Transaction {
     category: "",
     amount: 0,
     type: "in",
-    date: new Date().toLocaleDateString("pt-BR"),
+    date: new Date().toISOString(),
     iconName: "",
     attachment: null,
   };
@@ -152,9 +154,11 @@ export function TransactionModal({
 
   const isEditing = Boolean(transaction);
 
+  useEscapeKey(() => setIsModalOpen(false));
+
   const suggestCategory = (
     title: string,
-  ): { value: string; iconName: string } | null => {
+  ): { value: string; iconName: string; type: string } | null => {
     if (!title.trim()) return null;
     const lowerTitle = title.toLowerCase();
     for (const cat of categoryKeywords) {
@@ -164,9 +168,12 @@ export function TransactionModal({
             (opt) => opt.value === cat.value,
           );
           if (matchedOption) {
+            const suggestedType =
+              matchedOption.value === "Trabalho" ? "in" : "out";
             return {
               value: matchedOption.value,
               iconName: matchedOption.iconName,
+              type: suggestedType,
             };
           }
         }
@@ -190,6 +197,7 @@ export function TransactionModal({
           ...updated,
           category: suggestion.value,
           iconName: suggestion.iconName,
+          type: suggestion.type as "in" | "out",
         };
       } else {
         setIsSuggested(false);
@@ -306,16 +314,21 @@ export function TransactionModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
+      aria-labelledby="transaction-modal-title"
     >
       <div className="bg-surface border-outline/50 relative w-full max-w-md rounded-2xl border p-6 shadow-2xl transition-colors duration-300">
         <button
           onClick={() => setIsModalOpen(false)}
+          aria-label="Fechar"
           className="text-muted hover:text-foreground absolute top-4 right-4 transition-colors"
         >
-          <X className="h-6 w-6" />
+          <X className="h-6 w-6" aria-hidden="true" />
         </button>
 
-        <h2 className="text-foreground mb-6 text-xl font-bold transition-colors duration-300">
+        <h2
+          id="transaction-modal-title"
+          className="text-foreground mb-6 text-xl font-bold transition-colors duration-300"
+        >
           {isEditing ? t("editTitle") : t("addTitle")}
         </h2>
 
@@ -328,10 +341,14 @@ export function TransactionModal({
         >
           {/* Title input */}
           <div>
-            <label className="text-foreground mb-1 block text-sm font-medium">
+            <label
+              htmlFor="tx-title"
+              className="text-foreground mb-1 block text-sm font-medium"
+            >
               {t("titleLabel")}
             </label>
             <input
+              id="tx-title"
               value={transactionData.title}
               onChange={(e) => handleTitleChange(e.target.value)}
               type="text"
@@ -350,10 +367,14 @@ export function TransactionModal({
           <div className="grid grid-cols-2 gap-4">
             {/* Amount Input */}
             <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
+              <label
+                htmlFor="tx-amount"
+                className="text-foreground mb-1 block text-sm font-medium"
+              >
                 {t("amountLabel")}
               </label>
               <input
+                id="tx-amount"
                 value={transactionData.amount || ""}
                 onChange={(e) => {
                   const val = Number(e.target.value);
@@ -385,10 +406,14 @@ export function TransactionModal({
 
             {/* Type Input */}
             <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
+              <label
+                htmlFor="tx-type"
+                className="text-foreground mb-1 block text-sm font-medium"
+              >
                 {t("typeLabel")}
               </label>
               <select
+                id="tx-type"
                 value={transactionData.type}
                 onChange={(e) =>
                   setTransactionData((prev) => ({
@@ -406,10 +431,14 @@ export function TransactionModal({
 
           {/* Category Input */}
           <div>
-            <label className="text-foreground mb-1 block text-sm font-medium">
+            <label
+              htmlFor="tx-category"
+              className="text-foreground mb-1 block text-sm font-medium"
+            >
               {t("categoryLabel")}
             </label>
             <select
+              id="tx-category"
               value={transactionData.category}
               onChange={(e) => {
                 const val = e.target.value;
@@ -455,13 +484,19 @@ export function TransactionModal({
 
           {/* Attachments Upload Field */}
           <div>
-            <label className="text-foreground mb-1 block text-sm font-medium">
+            <label
+              htmlFor="tx-attachment"
+              className="text-foreground mb-1 block text-sm font-medium"
+            >
               {tAttachment("label")}
             </label>
             {transactionData.attachment ? (
               <div className="bg-input/40 border-outline/40 flex items-center justify-between rounded-xl border p-3.5 transition-colors">
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <Paperclip className="text-brand h-5 w-5 shrink-0" />
+                  <Paperclip
+                    className="text-brand h-5 w-5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <div className="overflow-hidden">
                     <p className="text-foreground truncate text-xs font-semibold">
                       {transactionData.attachment.name}
@@ -474,20 +509,26 @@ export function TransactionModal({
                 <button
                   type="button"
                   onClick={handleRemoveFile}
+                  aria-label="Remover anexo"
                   className="text-muted hover:text-alert cursor-pointer rounded-lg p-1.5 transition-colors"
                 >
-                  <Trash2 className="h-4.5 w-4.5" />
+                  <Trash2 className="h-4.5 w-4.5" aria-hidden="true" />
                 </button>
               </div>
             ) : (
               <div className="border-outline/50 hover:border-brand/40 bg-input/10 relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed px-4 py-5 text-center transition-colors">
                 <input
+                  id="tx-attachment"
                   type="file"
                   accept="image/*,application/pdf"
                   onChange={handleFileChange}
                   className="absolute inset-0 cursor-pointer opacity-0"
+                  aria-label={tAttachment("uploadButton")}
                 />
-                <Paperclip className="text-muted mb-1 h-5 w-5 opacity-60" />
+                <Paperclip
+                  className="text-muted mb-1 h-5 w-5 opacity-60"
+                  aria-hidden="true"
+                />
                 <p className="text-brand text-xs font-bold">
                   {tAttachment("uploadButton")}
                 </p>

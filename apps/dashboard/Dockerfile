@@ -29,8 +29,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
-# --chown permite que a API mock escreva em app/utils/transactions.json
+# Copy standalone output - this includes apps/dashboard/server.js
 COPY --from=builder --chown=nextjs:nodejs /app/apps/dashboard/.next/standalone ./
+# Copy static assets
 COPY --from=builder --chown=nextjs:nodejs /app/apps/dashboard/.next/static ./apps/dashboard/.next/static
 
 USER nextjs

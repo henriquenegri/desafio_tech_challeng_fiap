@@ -5,9 +5,10 @@ import createMiddleware from "next-intl/middleware";
 
 const handleI18nRouting = createMiddleware(routing);
 
-// Login page is the root path: "/" (pt-BR) or "/en" (English)
-function isLoginPage(pathname: string) {
-  return pathname === "/" || pathname === "/en" || pathname === "/en/";
+// Login and Register pages are the public auth pages
+function isAuthPage(pathname: string) {
+  // Matches /, /en, /pt-BR, /register, /en/register, /pt-BR/register with optional trailing slash
+  return /^(\/(en|pt-BR))?(\/register)?\/?$/.test(pathname);
 }
 
 // Paths served by the dashboard zone (see rewrites in next.config.ts)
@@ -19,13 +20,13 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value;
   const { pathname } = request.nextUrl;
 
-  // Unauthenticated: allow only the login root, redirect everything else
-  if (!token && !isLoginPage(pathname)) {
+  // Unauthenticated: allow only auth pages, redirect everything else
+  if (!token && !isAuthPage(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Authenticated user on login page: redirect to dashboard
-  if (token && isLoginPage(pathname)) {
+  // Authenticated user on auth page: redirect to dashboard
+  if (token && isAuthPage(pathname)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

@@ -12,7 +12,7 @@ import {
 } from "react";
 
 type AuthContextData = {
-  handleLogin: (email: string, password: string) => boolean;
+  handleLogin: (email: string, password: string) => Promise<boolean>;
   handleLogout: () => void;
   isAuthenticated: boolean;
 };
@@ -42,12 +42,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [localePrefix]);
 
   const handleLogin = useCallback(
-    (email: string, password: string) => {
-      if (email === "admin@vault.com" && password === "admin123") {
-        document.cookie = `auth_token=true; path=/; max-age=${60 * 60 * 24}`;
-        setIsAuthenticated(true);
-        window.location.assign(`${localePrefix}/dashboard`);
-        return true;
+    async (email: string, password: string) => {
+      try {
+        const response = await fetch("/api/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) return false;
+
+        const data = await response.json();
+        if (data.success && data.token) {
+          document.cookie = `auth_token=${data.token}; path=/; max-age=${60 * 60 * 24}`;
+          setIsAuthenticated(true);
+          window.location.assign(`${localePrefix}/dashboard`);
+          return true;
+        }
+      } catch (error) {
+        console.error("Login failed", error);
       }
       return false;
     },

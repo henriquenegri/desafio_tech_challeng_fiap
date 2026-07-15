@@ -1,9 +1,5 @@
-import { Transaction } from "@vault/shared";
-import fs from "fs/promises";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import path from "path";
-
-const filePath = path.join(process.cwd(), "app", "utils", "transactions.json");
 
 interface RouteParams {
   params: Promise<{
@@ -13,25 +9,36 @@ interface RouteParams {
 
 export async function DELETE(request: Request, { params }: RouteParams) {
   try {
-    const { id } = await params;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
 
-    const file = await fs.readFile(filePath, "utf-8");
-    const transactions: Transaction[] = JSON.parse(file);
-
-    const filteredTransactions = transactions.filter((tx) => tx.id !== id);
-
-    if (filteredTransactions.length === transactions.length) {
+    if (!token) {
       return NextResponse.json(
-        { success: false, error: "Transação não encontrada" },
-        { status: 404 },
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
       );
     }
 
-    await fs.writeFile(
-      filePath,
-      JSON.stringify(filteredTransactions, null, 2),
-      "utf-8",
+    const url = `${process.env.API_URL}/account/transaction/${(await params).id}`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log(
+      "DELETE backend response:",
+      response.status,
+      response.statusText,
+      url,
     );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to delete transaction. Status: ${response.status}`,
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -39,7 +46,6 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     });
   } catch (error) {
     console.error(error);
-
     return NextResponse.json(
       { success: false, error: "Erro ao excluir transação" },
       { status: 500 },
@@ -49,41 +55,58 @@ export async function DELETE(request: Request, { params }: RouteParams) {
 
 export async function PATCH(request: Request, { params }: RouteParams) {
   try {
-    const { id } = await params;
-    const updatedData: Partial<Transaction> = await request.json();
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
 
-    const file = await fs.readFile(filePath, "utf-8");
-    const transactions: Transaction[] = JSON.parse(file);
-
-    const transactionIndex = transactions.findIndex((tx) => tx.id === id);
-
-    if (transactionIndex === -1) {
+    if (!token) {
       return NextResponse.json(
-        { success: false, error: "Transação não encontrada" },
-        { status: 404 },
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
       );
     }
 
-    const updatedTransaction: Transaction = {
-      ...transactions[transactionIndex],
-      ...updatedData,
-      id,
+    const updatedData = await request.json();
+
+    const payload = {
+      type: updatedData.type === "in" ? "Credit" : "Debit",
+      value:
+        updatedData.type === "in" ? updatedData.amount : -updatedData.amount,
+      from: updatedData.type === "in" ? updatedData.title : "",
+      to: updatedData.type === "out" ? updatedData.title : "",
+      anexo: updatedData.attachment?.name || "",
     };
 
-    transactions[transactionIndex] = updatedTransaction;
-
-    await fs.writeFile(
-      filePath,
-      JSON.stringify(transactions, null, 2),
-      "utf-8",
+    // Legitimate call to the backend API
+    const response = await fetch(
+      `${process.env.API_URL}/account/transaction/${(await params).id}`,
+      {
+        method: "PUT", // Assumes PUT or PATCH for update
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      },
     );
+
+    if (!response.ok) {
+      throw new Error("Failed to update transaction");
+    }
+
+    const responseData = await response.json();
+
+    const savedTransaction = {
+      ...updatedData,
+      id: responseData.result?.id || updatedData.id,
+      date: responseData.result?.date || updatedData.date,
+    };
 
     return NextResponse.json({
       success: true,
-      data: updatedTransaction,
+      data: savedTransaction,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { success: false, error: "Erro ao editar transação" },
       { status: 500 },

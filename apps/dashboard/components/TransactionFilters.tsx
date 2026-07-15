@@ -63,8 +63,13 @@ export function TransactionFilters({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Search Input */}
         <div className="relative flex-1">
-          <Search className="text-muted absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 transition-colors duration-300" />
+          <Search
+            className="text-muted absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 transition-colors duration-300"
+            aria-hidden="true"
+          />
           <input
+            id="search-input"
+            aria-label={t("searchPlaceholder")}
             type="text"
             value={filters.searchQuery}
             onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
@@ -77,10 +82,14 @@ export function TransactionFilters({
         <div className="flex flex-wrap items-center gap-3">
           {/* Sorting */}
           <div className="flex items-center gap-2">
-            <label className="text-muted hidden text-sm font-medium xl:inline-block">
+            <label
+              htmlFor="sort-select"
+              className="text-muted hidden text-sm font-medium xl:inline-block"
+            >
               {t("sortByLabel")}:
             </label>
             <select
+              id="sort-select"
               value={filters.sortBy}
               onChange={(e) => handleFilterChange("sortBy", e.target.value)}
               className="bg-input border-outline/55 text-foreground focus:border-brand rounded-xl border px-3 py-3 text-sm font-semibold transition-colors duration-300 outline-none"
@@ -98,13 +107,14 @@ export function TransactionFilters({
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
             className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-all duration-300 ${
               isExpanded
                 ? "bg-brand border-brand text-background hover:bg-brand-hover"
                 : "bg-surface border-outline/55 text-foreground hover:bg-input"
             }`}
           >
-            <SlidersHorizontal className="h-4 w-4" />
+            <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
             <span>{t("advancedFilters")}</span>
             {activeFiltersCount > 0 && (
               <span
@@ -129,10 +139,11 @@ export function TransactionFilters({
             <button
               type="button"
               onClick={onClear}
+              aria-label={t("clearFilters")}
               className="text-muted hover:text-alert border-outline/30 hover:border-alert/30 flex items-center justify-center gap-2 rounded-xl border bg-transparent p-3 text-sm font-bold transition-colors"
               title={t("clearFilters")}
             >
-              <RotateCcw className="h-4 w-4" />
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t("clearFilters")}</span>
             </button>
           )}
@@ -151,10 +162,14 @@ export function TransactionFilters({
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {/* Type Filter */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-muted text-xs font-bold tracking-wider uppercase">
+              <label
+                htmlFor="filter-type"
+                className="text-muted text-xs font-bold tracking-wider uppercase"
+              >
                 {t("typeLabel")}
               </label>
               <select
+                id="filter-type"
                 value={filters.type}
                 onChange={(e) =>
                   handleFilterChange(
@@ -172,10 +187,14 @@ export function TransactionFilters({
 
             {/* Category Filter */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-muted text-xs font-bold tracking-wider uppercase">
+              <label
+                htmlFor="filter-category"
+                className="text-muted text-xs font-bold tracking-wider uppercase"
+              >
                 {t("categoryLabel")}
               </label>
               <select
+                id="filter-category"
                 value={filters.category}
                 onChange={(e) => handleFilterChange("category", e.target.value)}
                 className="bg-surface border-outline/40 text-foreground focus:border-brand w-full rounded-xl border px-3.5 py-2.5 text-sm transition-colors duration-300 outline-none"
@@ -191,12 +210,16 @@ export function TransactionFilters({
 
             {/* Date Range Filters */}
             <div className="flex flex-col gap-1.5 sm:col-span-1">
-              <label className="text-muted text-xs font-bold tracking-wider uppercase">
+              <label
+                className="text-muted text-xs font-bold tracking-wider uppercase"
+                aria-hidden="true"
+              >
                 {t("dateRangeLabel")}
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="date"
+                  aria-label={t("startDate")}
                   value={filters.startDate}
                   onChange={(e) =>
                     handleFilterChange("startDate", e.target.value)
@@ -207,6 +230,7 @@ export function TransactionFilters({
                 <span className="text-muted text-xs font-medium">to</span>
                 <input
                   type="date"
+                  aria-label={t("endDate")}
                   value={filters.endDate}
                   onChange={(e) =>
                     handleFilterChange("endDate", e.target.value)
@@ -219,12 +243,16 @@ export function TransactionFilters({
 
             {/* Amount Range Filters */}
             <div className="flex flex-col gap-1.5 sm:col-span-1">
-              <label className="text-muted text-xs font-bold tracking-wider uppercase">
+              <label
+                className="text-muted text-xs font-bold tracking-wider uppercase"
+                aria-hidden="true"
+              >
                 {t("amountRangeLabel")}
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
+                  aria-label={t("minAmount")}
                   value={filters.minAmount}
                   onChange={(e) =>
                     handleFilterChange("minAmount", e.target.value)
@@ -237,6 +265,7 @@ export function TransactionFilters({
                 <span className="text-muted text-xs font-medium">to</span>
                 <input
                   type="number"
+                  aria-label={t("maxAmount")}
                   value={filters.maxAmount}
                   onChange={(e) =>
                     handleFilterChange("maxAmount", e.target.value)

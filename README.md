@@ -1,19 +1,44 @@
-# Tech Challenge - Sistema de Gestão Financeira
+# Tech Challenge - Sistema de Gestão Financeira (The Digital Vault)
 
-Este projeto é uma aplicação de gestão de transações financeiras, desenvolvida como parte do Tech Challenge (POSTECH).
+Este projeto é uma aplicação de gestão de transações financeiras, desenvolvida como parte do Tech Challenge da pós-graduação.
 
-A solução foi construída com foco em UI/UX moderna, acessibilidade e internacionalização (i18n), proporcionando uma experiência fluida e intuitiva para diferentes perfis de usuários.
+A solução foi construída com foco em UI/UX moderna, acessibilidade e internacionalização (i18n), proporcionando uma experiência fluida e intuitiva para diferentes perfis de usuários. O frontend agora está integrado de forma real com a API (Backend) fornecida pelos professores para o projeto.
 
 ---
 
-## Arquitetura de Microfrontends
+## 🚀 Novidades e Funcionalidades do Desafio Implementadas
+
+Todos os requisitos solicitados no Tech Challenge foram implementados com sucesso na aplicação, garantindo uma interface rica e totalmente funcional:
+
+### 1. Dashboard e Análises (Home Page)
+
+- **Gráficos Financeiros:** Inclusão de gráficos e cards de resumo financeiro para oferecer uma visão detalhada do desempenho (receitas vs. despesas) no dashboard principal.
+
+### 2. Plus: Personalização de Dashboard ⭐
+
+- **Widget Manager:** O usuário pode personalizar a exibição do seu dashboard ligando ou desligando widgets de interesse (como _Meta de Economia_, _Alerta de Gastos_ e _Gráficos_). As alterações são salvas e refletidas instantaneamente na interface sem a necessidade de recarregar a página.
+
+### 3. Listagem de Transações Avançada
+
+- **Filtros e Pesquisa:** Implementação de filtros combinados e avançados. É possível realizar busca textual por título/categoria e filtrar por tipo (entrada/saída), categorias específicas, período (data inicial e final) e faixa de valor (mínimo e máximo).
+- **Paginação:** Sistema robusto de paginação adicionado na tabela de transações para otimizar o carregamento e visualização de grandes volumes de dados.
+
+### 4. Gestão de Transações
+
+- **Validação Avançada:** Implementação de regras estritas de validação no formulário de adição/edição (ex: o valor deve ser positivo, tamanho mínimo para títulos).
+- **Sugestões Automáticas de Categoria:** Ao digitar o título de uma transação (ex: "almoço", "salário", "uber"), o sistema automaticamente detecta a palavra-chave e sugere a categoria correta correspondente.
+- **Anexos de Arquivos:** Suporte completo ao upload de arquivos (recibos, PDFs, imagens) ao registrar uma nova transação.
+
+---
+
+## 🏗 Arquitetura de Microfrontends
 
 A aplicação é dividida em **microfrontends independentes**, usando [Multi-Zones do Next.js](https://nextjs.org/docs/app/guides/multi-zones) em um monorepo com npm workspaces + Turborepo. Cada módulo pode ser desenvolvido, atualizado e deployado de forma isolada.
 
 ```text
 ├── apps/
-│   ├── home/        # Zona padrão (porta 3000): login, autenticação e roteamento
-│   └── dashboard/   # Zona dashboard (porta 3001): transações + API mock
+│   ├── home/        # Zona padrão (porta 3333): login, autenticação, registro e roteamento
+│   └── dashboard/   # Zona dashboard (porta 3001): painel de transações e integração com a API
 └── packages/
     ├── ui/          # Design system compartilhado (componentes, tema, providers)
     └── shared/      # Tipos, utilitários, mensagens i18n e configuração de rotas
@@ -21,105 +46,60 @@ A aplicação é dividida em **microfrontends independentes**, usando [Multi-Zon
 
 ### Como funciona
 
-- **`apps/home`** é a zona padrão: serve a página de login (`/` e `/en`) e roteia, via `rewrites`, os paths `/dashboard`, `/dashboard-static` e `/api/transactions` para a zona dashboard.
-- **`apps/dashboard`** serve as rotas `/dashboard` (PT-BR) e `/en/dashboard`, além da API mock de transações. Usa `assetPrefix: "/dashboard-static"` para que seus assets não conflitem com os das outras zonas.
-- Para o usuário, tudo é servido sob **um único domínio** (`localhost:3000` em dev); a navegação entre zonas é uma navegação completa (hard navigation), como recomendado pela documentação do Next.js.
-- Cada zona tem seu próprio build, deploy e servidor — atualizar um módulo não exige rebuild dos demais.
-- O código comum (design system, tipos, i18n) vive em `packages/`, versionado junto mas consumido como dependência por cada zona.
-
-### Desenvolvimento isolado
-
-Cada microfrontend pode rodar sozinho:
-
-```bash
-npm run dev:home        # somente a zona de login (porta 3000)
-npm run dev:dashboard   # somente a zona do dashboard (porta 3001)
-```
-
-Em produção, a URL da zona dashboard é configurável pela variável de ambiente `DASHBOARD_URL` na zona home (default: `http://localhost:3001`).
+- **`apps/home`** é a zona padrão: serve a página de login e registro (`/`, `/register`) e roteia, via `rewrites`, as requisições para a zona dashboard.
+- **`apps/dashboard`** serve as rotas `/dashboard` (PT-BR) e `/en/dashboard`, atuando como BFF com a API de transações.
+- Para o usuário, tudo é servido sob **um único domínio** (`localhost:3333` em dev); a navegação entre zonas é feita de forma nativa e sem conflito de assets.
+- Cada zona tem seu próprio build, deploy e servidor.
 
 ---
 
-## Docker
+## 🐳 Como Rodar o Projeto com Docker (Recomendado)
 
-Cada microfrontend tem seu próprio `Dockerfile` (multi-stage, com `output: "standalone"` do Next.js, gerando imagens mínimas que rodam como usuário não-root). A orquestração dos contêineres é feita com **Docker Compose**:
+A orquestração dos contêineres do nosso **Frontend** é feita com **Docker Compose**.
+
+### 1. Preparar a API (Backend)
+
+Para rodar para avaliação, **primeiramente inicie a API do professor (Backend)** na sua máquina, garantindo que ela fique rodando na porta padrão `3000`.
+
+### 2. Iniciar os Containers do Frontend
+
+Com a API rodando, inicie o nosso ecossistema a partir da raiz deste projeto:
 
 ```bash
 docker compose up --build
 ```
 
-- **home** — exposto em `http://localhost:3000` (ponto de entrada da aplicação)
-- **dashboard** — contêiner independente; a zona home o alcança pela rede interna do Compose (`http://dashboard:3001`)
+### O que o Docker Compose faz:
 
-Cada imagem pode também ser buildada e deployada isoladamente:
-
-```bash
-docker build -f apps/home/Dockerfile -t vault-home .
-docker build -f apps/dashboard/Dockerfile -t vault-dashboard .
-```
+- Sobe a nossa interface principal no contêiner `home` e a expõe na porta **`http://localhost:3333`**.
+- Sobe o microfrontend interno no contêiner `dashboard`.
+- Configura a rede (`host.docker.internal` ou `network_mode: host`) para permitir que os frontends dentro do Docker se comuniquem com a API do professor que está rodando na sua máquina host de forma transparente.
 
 ---
 
-## Sobre o Projeto
+## 💻 Como Rodar o Projeto Manualmente (Fora do Docker)
 
-O sistema permite que o usuário gerencie suas finanças pessoais de forma simples e eficiente.
+Caso prefira rodar o ambiente de desenvolvimento localmente sem o Docker:
 
-### Funcionalidades
+### 1. Preparar e rodar a API
 
-- **Gestão de Transações**
-  - Adição de transações
-  - Edição (opcional)
-  - Exclusão
+Certifique-se de que a API Backend do professor já esteja rodando na porta `3000`.
 
-- **Visualização de Dados**
-  - Listagem clara de entradas e saídas
+### 2. Instalar dependências do Frontend
 
-- **Modo Claro/Escuro**
-  - Alternância dinâmica entre temas (Light/Dark Mode)
-
-- **Internacionalização (i18n)**
-  - Suporte para:
-    - Português (PT-BR)
-    - Inglês (EN)
-
-- **Mock de Dados**
-  - Utilização de dados simulados (JSON / Frontend) para facilitar testes e demonstração
-
----
-
-## Tecnologias Utilizadas
-
-- Next.js (Framework React) com Multi-Zones
-- Turborepo + npm workspaces (monorepo)
-- Tailwind CSS (Estilização e temas)
-- Lucide React (Ícones acessíveis)
-- next-intl (Internacionalização)
-
----
-
-## Como Rodar o Projeto
-
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/haramoni/tech-challenge.git
-cd tech-challenge
-```
-
-### 2. Instalar dependências
+Na raiz deste projeto:
 
 ```bash
 npm install
 ```
 
-### 3. Executar o projeto (todas as zonas)
+### 3. Executar o projeto (todas as zonas frontends)
 
 ```bash
 npm run dev
 ```
 
-A aplicação estará disponível em:
+A aplicação frontend estará disponível em:
+👉 **http://localhost:3333**
 
-http://localhost:3000
-
-Credenciais de demonstração: `admin@vault.com` / `admin123`
+_(Obs: mantivemos a credencial `admin@vault.com` / `admin123` chumbada no código como fallback para facilitar os testes, caso não queira criar um novo registro)._
